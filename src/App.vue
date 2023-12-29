@@ -1,28 +1,24 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="bg-gray-900 text-white min-h-screen">
+    <the-navbar />
+    <featured-banner />
+    <movie-section title="Popular of the week" />
+    <movie-section title="Just Release" />
+    <!-- Add more sections as needed -->
+    <footer />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+//import TheNavbar from './components/layout/TheNavbar.vue';
+import FeaturedBanner from './components/FeaturedBanner.vue';
+import MovieSection from './components/MovieSection.vue';
+//import Footer from './components/layout/Footer.vue';
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
+    FeaturedBanner,
+    MovieSection,
   }
-}
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
