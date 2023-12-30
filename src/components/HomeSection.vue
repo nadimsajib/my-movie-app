@@ -1,6 +1,6 @@
 <template>
     <div>
-      <featured-banner />
+      <featured-banner :movies="upcoming_movies"/>
       <movie-section title="Popular of the week" :movies="popular_movies"/>
       <movie-section title="Just Release" :movies="just_released_movies"/>
     </div>
@@ -21,7 +21,8 @@ import TMDBService from '@/services/TMDBService';
     data() {
         return {
           popular_movies: [],
-          just_released_movies: []
+          just_released_movies: [],
+          upcoming_movies: []
         };
     },
     created() {
@@ -29,12 +30,28 @@ import TMDBService from '@/services/TMDBService';
     },
     methods: {
         fetchMovies() {
-            TMDBService.discoverMovies()
+            TMDBService.newMovies()
             .then(response => {
                 this.just_released_movies = response.data.results;
             })
             .catch(error => {
-                console.error('Error fetching movies:', error);
+                console.error('Error fetching latest movies:', error);
+                // Handle the error as you see fit
+            });
+            TMDBService.popularMovies()
+            .then(response => {
+                this.popular_movies = response.data.results;
+            })
+            .catch(error => {
+                console.error('Error fetching popular movies:', error);
+                // Handle the error as you see fit
+            });
+            TMDBService.upcomingMovies()
+            .then(response => {
+                this.upcoming_movies = response.data.results;
+            })
+            .catch(error => {
+                console.error('Error fetching popular movies:', error);
                 // Handle the error as you see fit
             });
         }

@@ -8,11 +8,12 @@
 </template>
 
 <script>
-//import TheNavbar from './components/layout/TheNavbar.vue';
+import TheNavbar from './components/layout/TheNavbar.vue';
 //import Footer from './components/layout/Footer.vue';
 
 export default {
   components: {
+    TheNavbar
   }
 };
 </script>
