@@ -1,91 +1,355 @@
 <template>
-    <div class="relative overflow-hidden">
-    <div
-      class="flex transition-transform duration-300 ease-in-out"
-      :style="{ transform: `translateX(-${currentSlide * 100}%)` }"
-    >
-      <div
-        v-for="(movie, index) in movies"
-        :key="index"
-        class="flex-none w-full px-4"
-      >
-        <div class="bg-gray-800 p-4 rounded-md text-center" >
-        <img
-        :src="'https://image.tmdb.org/t/p/w500/'+movie.backdrop_path"
-        :alt="movie.title"
-        class="mx-auto"
-        style="height: 300px; width: auto;"
-        />
-          <h2 class="text-xl font-bold mt-2">{{ movie.title }}</h2>
-          <p class="text-gray-400 text-sm my-2">{{ movie.overview }}</p>
-          <div class="flex justify-center mt-4 space-x-2">
-            <button
-              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              @click="watchTrailer(movie)"
-            >
-              Watch Trailer
-            </button>
-            <button
-              class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-              @click="addToWatchlist(movie)"
-            >
-              Add to Watchlist
-            </button>
-          </div>
+  <div>
+    <div :class="$style.hero">
+      <div :class="$style.backdrop">
+        <div>
+          <button
+            :class="$style.play"
+            type="button"
+            aria-label="Play Trailer"
+            @click="openModal">
+            <!-- eslint-disable-next-line -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 55 55"><circle cx="27.5" cy="27.5" r="26.75" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/><path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.97 40.81L40.64 27.5 20.97 14.19v26.62z"/></svg>
+          </button>
+
+          <img
+            v-if="backdrop"
+            :src="backdrop"
+            class="lazyload"
+            :class="$style.image"
+            :alt="name">
         </div>
       </div>
+
+      <div :class="$style.pane">
+        <transition
+          appear
+          name="hero">
+          <div>
+            <h1 :class="$style.name">
+              <template v-if="isSingle">
+                {{ name }}
+              </template>
+
+              <template v-else>
+                <nuxt-link :to="{ name: `${type}-id`, params: { id: item.id } }">
+                  {{ name }}
+                </nuxt-link>
+              </template>
+            </h1>
+
+            <div :class="$style.meta">
+              <div
+                v-if="stars || item.vote_count"
+                :class="$style.rating">
+                <div
+                  v-if="stars"
+                  :class="$style.stars">
+                  <div :style="{ width: `${stars}%` }" />
+                </div>
+
+                <div v-if="item.vote_count > 0">
+                  {{ item.vote_count }} Reviews
+                </div>
+              </div>
+
+              <div :class="$style.info">
+                <span v-if="item.number_of_seasons">Season {{ item.number_of_seasons }}</span>
+                <span v-if="yearStart">{{ yearStart }}</span>
+                <span v-if="item.runtime">{{ item.runtime }}</span>
+                <span v-if="cert">Cert. {{ cert }}</span>
+              </div>
+            </div>
+
+            <div :class="$style.desc">
+              {{ item.overview }}
+            </div>
+
+            
+          </div>
+        </transition>
+      </div>
     </div>
-    <button
-      class="absolute left-0 top-1/2 transform -translate-y-1/2 text-white text-3xl p-4"
-      @click="prevSlide"
-    >
-      &#10094;
-    </button>
-    <button
-      class="absolute right-0 top-1/2 transform -translate-y-1/2 text-white text-3xl p-4"
-      @click="nextSlide"
-    >
-      &#10095;
-    </button>
+
   </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      movies: {
-        type: Array,
-        required: true
-      }
+</template>
+
+<script>
+import { name, stars, yearStart, cert, backdrop } from '@/mixins/Details';
+
+export default {
+  components: {
+  },
+
+  mixins: [
+    name,
+    stars,
+    yearStart,
+    cert,
+    backdrop,
+  ],
+
+  props: {
+    item: {
+      type: Object,
+      required: true,
     },
-    data() {
-      return {
-        currentSlide: 0
-      };
+  },
+
+  data () {
+    return {
+      isSingle: this.item.id === this.$route.params.id,
+      modalVisible: false,
+    };
+  },
+
+  computed: {
+    type () {
+      return this.item.title ? 'movie' : 'tv';
     },
-    methods: {
-      nextSlide() {
-        if (this.currentSlide < this.movies.length - 1) {
-          this.currentSlide++;
-        }
-      },
-      prevSlide() {
-        if (this.currentSlide > 0) {
-          this.currentSlide--;
-        }
-      },
-      watchTrailer(movie) {
-        // Logic to watch the trailer
-        console.log('Watching trailer for:', movie.title);
-      },
-      addToWatchlist(movie) {
-        // Logic to add the movie to the watchlist
-        console.log('Added to watchlist:', movie.title);
-      }
+  },
+
+  methods: {
+    openModal () {
+      this.modalVisible = true;
+    },
+
+    closeModal () {
+      this.modalVisible = false;
+    },
+  },
+};
+</script>
+
+<style lang="scss" module>
+@import '~/assets/css/utilities/_variables.scss';
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 35rem;
+  color: #999;
+  background-color: #000;
+
+  @media (min-width: $breakpoint-xsmall) {
+    height: 50rem;
+  }
+
+  @media (min-width: $breakpoint-medium) {
+    position: relative;
+    display: block;
+    height: 0;
+    padding-bottom: 40%;
+  }
+}
+
+.backdrop {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+
+  @media (min-width: $breakpoint-medium) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: block;
+    width: 71.1%;
+    height: 100%;
+  }
+
+  &::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+    content: '';
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.1) 100%);
+
+    @media (min-width: $breakpoint-medium) {
+      background-image: linear-gradient(to right, #000 0, transparent 50%, transparent 100%);
     }
-  };
-  </script>
-  
-  <style scoped>
-  /* You can add additional styles here */
-  </style>
+  }
+
+  > div {
+    width: 100%;
+
+    @media (min-width: $breakpoint-medium) {
+      display: inline;
+    }
+  }
+}
+
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  padding: 0;
+  margin: 0;
+  background: none;
+  transform: translate(-50%, -50%);
+
+  @media (min-width: $breakpoint-medium) {
+    display: none;
+  }
+}
+
+.image {
+  display: inline-block;
+  max-width: none;
+  height: 100%;
+
+  @media (max-width: $breakpoint-medium - 1) {
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
+.pane {
+  padding: 0 1.5rem 1.5rem;
+
+  @media (min-width: $breakpoint-small) {
+    padding: 0 4rem 4rem;
+  }
+
+  @media (min-width: $breakpoint-medium) {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    width: 55%;
+    height: 100%;
+    padding: 5rem 4rem;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    padding-right: 5rem;
+    padding-left: 5rem;
+  }
+
+  @media (min-width: $breakpoint-xlarge) {
+    width: 43%;
+  }
+}
+
+.name {
+  margin: 0 0 1.4rem;
+  font-size: 2.8rem;
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: $letter-spacing;
+
+  @media (min-width: $breakpoint-small) {
+    margin-bottom: 1.8rem;
+  }
+
+  @media (min-width: $breakpoint-large) {
+    font-size: 2.4vw;
+  }
+}
+
+.meta {
+  font-size: 1.4rem;
+
+  @media (min-width: $breakpoint-small) {
+    display: flex;
+  }
+
+  @media (min-width: 1650px) {
+    font-size: 0.9vw;
+  }
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.3rem;
+
+  @media (min-width: $breakpoint-small) {
+    margin: 0 1.2rem 0 0;
+  }
+}
+
+.stars {
+  width: 8.5rem;
+  height: 1.4rem;
+  margin-right: 1rem;
+  background-image: url('~/assets/images/stars.png');
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+
+  @media (min-width: $breakpoint-small) {
+    width: 10.3rem;
+    height: 1.7rem;
+  }
+
+  > div {
+    height: 100%;
+    background-image: url('~/assets/images/stars-filled.png');
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+  }
+}
+
+.info {
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-right: 0.9rem;
+  }
+}
+
+.desc {
+  display: block;
+  margin-top: 2.5rem;
+  font-size: 1.5rem;
+  color: #fff;
+
+  @media (max-width: $breakpoint-small - 1) {
+    display: none;
+  }
+
+  @media (min-width: 1650px) {
+    font-size: 0.9vw;
+  }
+}
+
+.trailer {
+  margin-top: 3rem;
+
+  @media (max-width: $breakpoint-medium - 1) {
+    display: none;
+  }
+
+  @media (min-width: 1650px) {
+    font-size: 0.9vw;
+  }
+}
+</style>
+
+<style lang="scss">
+.hero-enter-active,
+.hero-leave-active {
+  transition: transform .75s cubic-bezier(.4, .25, .3, 1), opacity .3s cubic-bezier(.4, .25, .3, 1);
+}
+
+.hero-enter,
+.hero-leave-to {
+  opacity: 0;
+  transform: translate3d(0, 2rem, 0);
+}
+
+.hero-enter-to,
+.hero-leave {
+  opacity: 1;
+  transform: translateZ(0);
+}
+</style>
