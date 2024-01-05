@@ -1,10 +1,10 @@
 <template>
-    <nav class="bg-black border-gray-200 dark:bg-gray-900">
-      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-      <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
-          <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
-      </a>
+    <nav class=" border-gray-200 dark:bg-gray-900">
+      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">          
+          <router-link
+          class="flex items-center space-x-3 rtl:space-x-reverse"
+  :key="$route.path"
+  :to="{ name: `Home`}"><h1>The Movie Central</h1></router-link>
       <div class="flex md:order-2">
         <button
           class="search-toggle"
@@ -24,11 +24,20 @@
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
               </svg>
             </div>
-            <input type="text" id="search-navbar" class="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
+            <input type="text" id="search-navbar" class="block w-full p-2 ps-10  focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search...">
           </div>
           <ul class="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
             <li>
-              <a href="#" class="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" aria-current="page">Home</a>
+              <router-link
+  class="card__link"
+  :key="$route.path"
+  :to="{ name: `Home`}"><span class="text-2xl">Home</span></router-link>
+            </li>
+            <li>
+              <router-link
+  class="card__link"
+  :key="$route.path"
+  :to="{ name: `favorite`}"><span class="text-2xl">Favourites</span></router-link>
             </li>
           </ul>
         </div>

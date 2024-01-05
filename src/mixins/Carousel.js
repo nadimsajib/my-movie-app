@@ -57,7 +57,6 @@ export default {
     moveToClickEvent (direction) {
       const invisible = this.$refs.carouselElement.scrollLeft + (direction === 'left' ? -this.visibleWidth + 1 : this.visibleWidth);
       const remainder = invisible - invisible % this.elementWidth;
-      console.log(this.$refs.carouselElement.scrollLeft, direction ,this.visibleWidth , this.visibleWidth);
 
       this.moveTo(remainder);
     },

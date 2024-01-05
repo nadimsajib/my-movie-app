@@ -2,6 +2,7 @@
     <div class="card">
       <router-link
   class="card__link"
+  :key="$route.path"
   :to="{ name: `movie-id`, params: { id: item.id } }">
         <div class="card__img">
           <img
@@ -36,12 +37,17 @@
           </div>
         </div>
       </router-link>
+      <button class="button button--success" @click="toggleFavorite(item)">
+              {{ isFavorite(item.id) ? 'Remove from Favorites' : 'Add to Favorites' }}
+            </button>
+            <router-view :key="$route.path"/>
     </div>
   </template>
   
   <script>
   import { apiImgUrl } from '@/services/TMDBService';
   import { name, stars } from '@/mixins/Details';
+  import { mapActions, mapGetters } from 'vuex';
   
   export default {
     mixins: [
@@ -51,7 +57,7 @@
   
     props: {
       item: {
-        type: Object,
+        type: null,
         required: true,
       },
     },
@@ -76,7 +82,15 @@
           return 'movie';
         }
       },
+      ...mapGetters('favorites', [
+      'isFavorite' 
+    ]),
     },
+    methods: {
+      ...mapActions('favorites', [
+      'toggleFavorite' 
+    ]),
+    }
   };
   </script>
   <style lang="scss" module>

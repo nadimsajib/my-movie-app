@@ -1,5 +1,5 @@
 <template>
-  <main class="main">
+  <div>
     <transition name="slidedown">
       <SearchForm v-if="searchOpen" />
     </transition>
@@ -10,11 +10,11 @@
       v-if="item.credits && item.credits.cast"
         :item="item" />
       <MovieRecommendation
-        title="Recommended "
-        v-if="recommended && recommended.results && recommended.results.length"
+      v-if="recommended && recommended.results && recommended.results.length"
+        title="Recommended"
         :items="recommended" />
 
-  </main>
+  </div>
 </template>
 
 <script>
@@ -68,7 +68,7 @@ export default {
     };
   },
   mounted() {
-    this.getResult()
+    //this.getResult()
     //alert(this.$route.params.id)
     //this.items = this.$route.params.id;
   },
@@ -108,16 +108,27 @@ export default {
   },
 
   created () {
-    this.initRecommended();
+    //this.initRecommended();
+    this.getResult(this.$route.params.id)
+  },
+  watch: {
+    '$route' (to, from) {
+      // Called every time the route changes
+      // You can perform actions here to update your component based on the new route parameters
+      if (to.params.id !== from.params.id) {
+        this.getResult(to.params.id);
+      }
+    }
   },
 
   methods: {
     truncate (string, length) {
       return this.$options.filters.truncate(string, length);
     },
-    async getResult() {
+    async getResult(id) {
           try {
-          const item = await getMovie(this.$route.params.id);
+          const item = await getMovie(id);
+          this.recommended = await getMovieRecommended(id);
           this.featured = item;
           this.item = item;
 
@@ -125,14 +136,6 @@ export default {
           console.log("error");
         }
       },
-      initRecommended () {
-      // if recommended don't exist, retreive them
-      //if (this.recommended !== null) return;
-
-      getMovieRecommended(this.$route.params.id).then((response) => {
-        this.recommended = response;
-      });
-    },
     }
     
 };

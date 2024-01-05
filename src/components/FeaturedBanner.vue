@@ -28,9 +28,10 @@
           <div>
             <h1 :class="$style.name">
               <template v-if="isSingle">
-                {{ name }}
+                <!-- <router-link :to="{ name: `movie-id`, params: { id: item.id } }"> -->
+                  {{ name }}
+                <!-- </router-link> -->
               </template>
-
               <template v-else>
                 <router-link :to="{ name: `movie-id`, params: { id: item.id } }">
                   {{ name }}
@@ -56,14 +57,16 @@
               <div :class="$style.info">
                 <span v-if="item.number_of_seasons">Season {{ item.number_of_seasons }}</span>
                 <span v-if="yearStart">{{ yearStart }}</span>
-                <span v-if="item.runtime">{{ item.runtime }}</span>
-                <span v-if="cert">Cert. {{ cert }}</span>
+                <span v-if="item.runtime">{{ item.runtime | runtime  }}</span>
               </div>
             </div>
 
             <div :class="$style.desc">
               {{ item.overview }}
             </div>
+            <button class="button button--success" @click="toggleFavorite(item)">
+              {{ isFavorite(item.id) ? 'Remove from Favorites' : 'Add to Favorites' }}
+            </button>
 
             
           </div>
@@ -76,6 +79,7 @@
 
 <script>
 import { name, stars, yearStart, cert, backdrop } from '@/mixins/Details';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -100,6 +104,7 @@ export default {
     return {
       isSingle: this.item.id === this.$route.params.id,
       modalVisible: false,
+      movie: []
     };
   },
 
@@ -107,6 +112,9 @@ export default {
     type () {
       return this.item.title ? 'movie' : 'tv';
     },
+    ...mapGetters('favorites', [
+      'isFavorite' 
+    ]),
   },
 
   methods: {
@@ -117,6 +125,9 @@ export default {
     closeModal () {
       this.modalVisible = false;
     },
+    ...mapActions('favorites', [
+      'toggleFavorite' 
+    ]),
   },
 };
 </script>

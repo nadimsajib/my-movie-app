@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import HomeSection from '@/components/HomeSection';
+import FavoriteMovie from '@/components/FavoriteMovie';
 import SearchIndex from '@/components/search/SearchIndex.vue';
 import MovieSection from '@/components/movie/MovieSection';
 //import Search from '@/views/Search.vue';
@@ -26,6 +27,11 @@ export default new Router({
       name: 'movie-id',
       component: MovieSection
     },
+    {
+      path: '/favorite',
+      name: 'favorite',
+      component: FavoriteMovie,
+    }
     // Define other routes as needed
   ]
 });

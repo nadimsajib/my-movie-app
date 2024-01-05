@@ -10,9 +10,15 @@
         </h2>
       </div>
   
-      <div class="listing__items">
+      <div class="listing__items" v-if="items.results">
         <CardIndex
           v-for="item in items.results"
+          :key="`card-${item.id}`"
+          :item="item" />
+      </div>
+      <div class="listing__items" v-else-if="items.favorites">
+        <CardIndex
+          v-for="item in items.favorites"
           :key="`card-${item.id}`"
           :item="item" />
       </div>
