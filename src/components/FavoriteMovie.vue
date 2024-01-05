@@ -4,18 +4,20 @@
       <transition name="slidedown">
       <SearchForm v-if="searchOpen" />
     </transition>
-    <div>
+    <div v-if="favorites && favorites.favorites.length">
     <SearchResults
         v-if="favorites"
         title="My Favorites"
         :items="favorites"/>
-
-    <ul>
-      <li v-for="movie in favorites" :key="movie.id">
-        {{ movie.title }}
-        <button @click="toggleFavorite(movie)">Remove from Favorites</button>
-      </li>
-    </ul>
+  </div>
+  <div class="listing" v-else>
+    <div
+        class="listing__head">
+        <h2
+          class="listing__title">
+          No favorites found
+        </h2>
+      </div>
   </div>
     </div>
   </main>

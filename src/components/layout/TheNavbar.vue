@@ -37,7 +37,7 @@
               <router-link
   class="card__link"
   :key="$route.path"
-  :to="{ name: `favorite`}"><span class="text-2xl">Favourites</span></router-link>
+  :to="{ name: `favorite`}"><span class="text-2xl">Favorites</span></router-link>
             </li>
           </ul>
         </div>
