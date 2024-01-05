@@ -7,7 +7,12 @@
       <MovieInfo
         :item="item" />
       <MovieCast
+      v-if="item.credits && item.credits.cast"
         :item="item" />
+      <MovieRecommendation
+        title="Recommended "
+        v-if="recommended && recommended.results && recommended.results.length"
+        :items="recommended" />
 
   </main>
 </template>
@@ -16,10 +21,11 @@
 import { mapState } from 'vuex';
 import FeaturedBanner from '@/components/FeaturedBanner.vue';
 import SearchForm from '@/components/search/SearchForm.vue';
-import { apiImgUrl, getMovie } from '@/services/TMDBService';
+import { apiImgUrl, getMovie, getMovieRecommended } from '@/services/TMDBService';
 import { name, yearStart } from '@/mixins/Details';
 import MovieInfo from '@/components/movie/MovieInfo';
 import MovieCast from '@/components/movie/MovieCast';
+import MovieRecommendation from '@/components/common/MovieRecommendation';
 
 export default {
   components: {
@@ -27,6 +33,7 @@ export default {
     FeaturedBanner,
     SearchForm,
     MovieCast,
+    MovieRecommendation
   },
 
   mixins: [
@@ -54,7 +61,7 @@ export default {
     return {
       menu: [],
       activeMenu: 'overview',
-      recommended: null,
+      recommended: [],
       featured: {},
       item: [],
       id: '',
@@ -101,8 +108,7 @@ export default {
   },
 
   created () {
-    //this.createMenu();
-    //this.initRecommended();
+    this.initRecommended();
   },
 
   methods: {
@@ -118,7 +124,16 @@ export default {
         } catch {
           console.log("error");
         }
-      }
+      },
+      initRecommended () {
+      // if recommended don't exist, retreive them
+      //if (this.recommended !== null) return;
+
+      getMovieRecommended(this.$route.params.id).then((response) => {
+        this.recommended = response;
+      });
+    },
     }
+    
 };
 </script>
