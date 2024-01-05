@@ -102,10 +102,12 @@ export const cert = {
 export const directors = {
   computed: {
     directors () {
-      const people = this.item.credits.crew;
+      if(this.item.credits){
+        const people = this.item.credits.crew;
 
-      if (people) {
-        return people.filter(person => person.job === 'Director').map(person => `<a href="/person/${person.id}">${person.name}</a>`).join(', ');
+        if (people) {
+          return people.filter(person => person.job === 'Director').map(person => `${person.name}`).join(', ');
+        }
       }
     },
   },

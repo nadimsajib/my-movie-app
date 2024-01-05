@@ -32,9 +32,9 @@
               </template>
 
               <template v-else>
-                <nuxt-link :to="{ name: `${type}-id`, params: { id: item.id } }">
+                <router-link :to="{ name: `movie-id`, params: { id: item.id } }">
                   {{ name }}
-                </nuxt-link>
+                </router-link>
               </template>
             </h1>
 

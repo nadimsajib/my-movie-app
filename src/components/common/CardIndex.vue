@@ -1,5 +1,8 @@
 <template>
     <div class="card">
+      <router-link
+  class="card__link"
+  :to="{ name: `movie-id`, params: { id: item.id } }">
         <div class="card__img">
           <img
             v-if="poster"
@@ -32,6 +35,7 @@
             {{ item.vote_average }}
           </div>
         </div>
+      </router-link>
     </div>
   </template>
   
