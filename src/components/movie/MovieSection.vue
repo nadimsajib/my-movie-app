@@ -6,6 +6,8 @@
       <featured-banner :item="featured"/>
       <MovieInfo
         :item="item" />
+      <MovieCast
+        :item="item" />
 
   </main>
 </template>
@@ -17,13 +19,14 @@ import SearchForm from '@/components/search/SearchForm.vue';
 import { apiImgUrl, getMovie } from '@/services/TMDBService';
 import { name, yearStart } from '@/mixins/Details';
 import MovieInfo from '@/components/movie/MovieInfo';
-//import MovieCast from '@/components/movie/MovieCast';
+import MovieCast from '@/components/movie/MovieCast';
 
 export default {
   components: {
     MovieInfo,
     FeaturedBanner,
-    SearchForm
+    SearchForm,
+    MovieCast,
   },
 
   mixins: [
